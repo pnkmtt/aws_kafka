@@ -20,6 +20,10 @@ zookeeper_instance_type - zookeeper instance type-  default = "t2.micro"
 number_of_zookeepers - number of zookeeper nodes to build default = 3
 number_of_brokers - number of brokers to build default = 6
 
+Outcome:
+
+This will build a multi node zookeeper and broker configuration with appropirate security groups in your default VPC
+
 TODO:
 
 - Add ansible for Kafka build
