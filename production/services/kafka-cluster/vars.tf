@@ -24,6 +24,6 @@ variable "number_of_zookeepers" {
 }
 
 variable "number_of_brokers" {
-  description = "The number of zookeepers that are needed"
+  description = "The number of brokers that are needed"
   default = 6
 }
