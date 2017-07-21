@@ -29,3 +29,4 @@ TODO:
 - Add ansible for Kafka build
 - put in ELB in front of Kafka nodes
 - put in autoscaling for broker nodes
+- fix the azs variables to expand to dynamic AZ list.
