@@ -11,13 +11,14 @@ provider "aws" {
 
 resource "aws_instance" "brokers" {
  count                  = "${var.number_of_brokers}"
- ami                    = "ami-40d28157"
+ ami                    = "ami-c13b68ba"
  vpc_security_group_ids = ["${aws_security_group.kafka-brokers.id}"]
  availability_zone      = "${element(var.azs, count.index)}"
  instance_type   				= "${var.broker_instance_type}"
  key_name               = "${var.key_name}"
  tags {
     Name = "${var.cluster_name}-kafka-broker-${count.index}"
+    Role = "kafka-broker"
   }
 }
 
@@ -35,6 +36,12 @@ resource "aws_security_group" "kafka-brokers" {
 		to_port		=	"22"
 		protocol	=	"tcp"
 		cidr_blocks	=	["0.0.0.0/0"]
+	}
+	egress {
+    		from_port       = 	0
+    		to_port         =	0
+    		protocol        = 	"-1"
+    		cidr_blocks     = 	["0.0.0.0/0"]
 	}
 	lifecycle {
 		create_before_destroy = true

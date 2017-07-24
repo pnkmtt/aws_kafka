@@ -10,14 +10,15 @@ provider "aws" {
 }
 
 resource "aws_instance" "zookeeper" {
- count 									= "${var.number_of_zookeepers}"
- ami                    = "ami-40d28157"
- vpc_security_group_ids = ["${aws_security_group.kafka-zookeeper.id}"]
- availability_zone 			= "${element(var.azs, count.index)}"
- instance_type   				= "${var.zookeeper_instance_type}"
- key_name               = "${var.key_name}"
+ count 				= "${var.number_of_zookeepers}"
+ ami                    	= "ami-c13b68ba"
+ vpc_security_group_ids 	= ["${aws_security_group.kafka-zookeeper.id}"]
+ availability_zone 		= "${element(var.azs, count.index)}"
+ instance_type   		= "${var.zookeeper_instance_type}"
+ key_name               	= "${var.key_name}"
  tags {
     Name = "${var.cluster_name}-kafka-zookeeper-${count.index}"
+    Role = "kafka-zookeeper"
   }
 }
 
@@ -36,6 +37,12 @@ resource "aws_security_group" "kafka-zookeeper" {
 		protocol	=	"tcp"
 		cidr_blocks	=	["0.0.0.0/0"]
 	}
+        egress {
+                from_port       =       0       
+                to_port         =       0
+                protocol        =       "-1"
+                cidr_blocks     =       ["0.0.0.0/0"]
+        }
 	lifecycle {
 		create_before_destroy = true
 	}
