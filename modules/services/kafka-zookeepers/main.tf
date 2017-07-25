@@ -19,6 +19,7 @@ resource "aws_instance" "zookeeper" {
  tags {
     Name = "${var.cluster_name}-kafka-zookeeper-${count.index}"
     Role = "kafka-zookeeper"
+    Zookeeperid = "${count.index+1}"
   }
 }
 

@@ -1,0 +1,41 @@
+---
+# create a temp directory to put install package into
+- name: create /tmp/zookeeper directory
+  file:
+    path: /tmp/zookeeper
+    state: directory
+
+# dump the zookeeper id to a file
+- name: create /tmp/zookeeper/myid file
+  shell: echo {{ hostvars[inventory_hostname]['ec2_tag_Zookeeperid'] }} > /tmp/zookeeper/myid
+
+# update ownership of the temp directory
+- name: change Own
+  file:
+    path: /tmp/zookeeper
+    owner: kafka
+    group: kafka
+    recurse: yes
+
+# publish our enviroment details file from files directory
+- name: add kafka environment defaults
+  copy:
+    src: files/kafka.default
+    dest: /etc/default/kafka
+
+# install start script into systemd
+- name: add kafka systemd service
+  copy:
+    src: files/kafka-zookeeper.service
+    dest: /etc/systemd/system/kafka-zookeeper.service
+
+# populate zookeeper.properties from the template directory and restart zookeeper
+- name: configure kafka
+  template:
+    src: zookeeper.properties.j2
+    dest: /usr/local/kafka/config/zookeeper.properties
+    owner: kafka
+    group: kafka
+    force: yes
+  notify:
+    - restart kafka-zookeeper
