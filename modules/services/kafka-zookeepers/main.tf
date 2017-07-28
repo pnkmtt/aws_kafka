@@ -27,11 +27,23 @@ resource "aws_security_group" "kafka-zookeeper" {
 	name	= "${var.cluster_name}-kafka-zookeeper-sg"
 
 	ingress {
-		from_port	=	"${var.zoo_keeper_server_port}"
-		to_port		=	"${var.zoo_keeper_server_port}"
+		from_port	=	"${var.zoo_keeper_client_port}"
+		to_port		=	"${var.zoo_keeper_client_port}"
 		protocol	=	"tcp"
 		cidr_blocks	=	["0.0.0.0/0"]
 	}
+	ingress {
+		from_port	=	"${var.zoo_keeper_leader_port}"
+		to_port		=	"${var.zoo_keeper_leader_port}"
+		protocol	=	"tcp"
+		cidr_blocks	=	["0.0.0.0/0"]
+	}
+	ingress {
+                from_port       =       "${var.zoo_keeper_leader_election_port}"
+                to_port         =       "${var.zoo_keeper_leader_election_port}"
+                protocol        =       "tcp"
+                cidr_blocks     =       ["0.0.0.0/0"]
+        }
 	ingress {
 		from_port	=	"22"
 		to_port		=	"22"

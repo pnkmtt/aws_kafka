@@ -3,9 +3,17 @@ variable "number_of_zookeepers" {
   default = 3
 }
 
-variable "zoo_keeper_server_port" {
+variable "zoo_keeper_client_port" {
   description = "The port that zookeeper listens on"
   default = 2181
+}
+variable "zoo_keeper_leader_port" {
+  description = "The port that zookeeper listens on"
+  default = 2888
+}
+variable "zoo_keeper_leader_election_port" {
+  description = "The port that zookeeper listens on"
+  default = 3888
 }
 
 variable "cluster_name" {
