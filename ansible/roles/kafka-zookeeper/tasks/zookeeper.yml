@@ -35,6 +35,8 @@
   copy:
     src: files/kafka-zookeeper.service
     dest: /etc/systemd/system/kafka-zookeeper.service
+    when: ansible_distribution == 'Centos'
+
 
 # populate zookeeper.properties from the template directory and restart zookeeper
 - name: configure kafka
@@ -46,3 +48,25 @@
     force: yes
   notify:
     - restart kafka-zookeeper
+
+# populate zookeeper.properties from the template directory and restart zookeeper
+- name: configure kafka
+  file:
+    src: /usr/local/kafka/config/zookeeper.properties
+    dest: /etc/zookeeper/conf/zoo.cfg
+    owner: kafka
+    group: kafka
+    state: link
+    force: yes
+    when: ansible_distribution == 'Ubuntu'
+  notify:
+    - restart zookeeper
+
+- name: Show zookeeper status
+  shell: /bin/echo mntr | nc {{ ec2_private_dns_name }} 2181 | grep zk_server_state
+  register: echo_zoo_mntr
+  tags:
+    - notification
+
+- debug: 
+    var: echo_zoo_mntr
